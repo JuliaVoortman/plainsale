@@ -1,1 +1,2 @@
-<content>// This file is removed as we're using Postmark for all email functionality</content>
+// Gmail provider functionality has been replaced by Postmark
+export {};

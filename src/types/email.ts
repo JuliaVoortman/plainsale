@@ -1,4 +1,4 @@
-<content>export interface EmailMessage {
+export interface EmailMessage {
   id: string;
   subject: string;
   from: string;
@@ -19,4 +19,4 @@ export interface EmailFilter {
   dateFrom?: Date;
   dateTo?: Date;
   subject?: string;
-}</content>
+}
