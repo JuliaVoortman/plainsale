@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // Used for migrations
+}
+
+model Organization {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String       @unique
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  users         User[]
+  dealRooms     DealRoom[]
+  settings      Json?
+  customDomain  String?
+  @@index([slug])
+}
+
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  name          String?
+  organization  Organization @relation(fields: [orgId], references: [id])
+  orgId         String
+  role          UserRole     @default(USER)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  dealRooms     DealRoom[]   @relation("DealRoomMembers")
+  ownedRooms    DealRoom[]   @relation("DealRoomOwner")
+  @@index([email, orgId])
+}
+
+model DealRoom {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String
+  organization  Organization @relation(fields: [orgId], references: [id])
+  orgId         String
+  owner         User         @relation("DealRoomOwner", fields: [ownerId], references: [id])
+  ownerId       String
+  members       User[]       @relation("DealRoomMembers")
+  resources     Resource[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  @@unique([orgId, slug])
+  @@index([slug, orgId])
+}
+
+model Resource {
+  id          String     @id @default(cuid())
+  name        String
+  type        String
+  key         String     // S3 key
+  size        Int
+  dealRoom    DealRoom   @relation(fields: [dealRoomId], references: [id])
+  dealRoomId  String
+  uploadedBy  String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  @@index([dealRoomId])
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  GUEST
+}
