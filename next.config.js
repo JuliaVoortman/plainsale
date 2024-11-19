@@ -2,11 +2,8 @@
 const nextConfig = {
   output: 'standalone',
   experimental: {
-    // Disable experimental features
-    serverActions: false,
-    serverComponents: false
+    // Remove experimental features configuration
   },
-  // Use simplified compilation
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
