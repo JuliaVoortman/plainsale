@@ -1,13 +1,15 @@
-import { PrismaClient } from '@prisma/client';
+import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { sql } from '@vercel/postgres';
+import * as schema from './schema';
 
 class ConnectionManager {
   private static instance: ConnectionManager;
-  private connections: Map<string, PrismaClient>;
-  private defaultClient: PrismaClient;
+  private connections: Map<string, ReturnType<typeof drizzle>>;
+  private defaultClient: ReturnType<typeof drizzle>;
 
   private constructor() {
     this.connections = new Map();
-    this.defaultClient = new PrismaClient();
+    this.defaultClient = drizzle(sql, { schema });
   }
 
   static getInstance(): ConnectionManager {
@@ -17,30 +19,9 @@ class ConnectionManager {
     return ConnectionManager.instance;
   }
 
-  async getConnection(orgId: string): Promise<PrismaClient> {
-    // For enterprise customers with dedicated schemas
-    if (process.env.USE_DEDICATED_SCHEMAS === 'true') {
-      if (!this.connections.has(orgId)) {
-        const client = new PrismaClient({
-          datasources: {
-            db: {
-              url: `${process.env.DATABASE_URL}?schema=${orgId}`
-            }
-          }
-        });
-        this.connections.set(orgId, client);
-      }
-      return this.connections.get(orgId)!;
-    }
-
-    // Default shared database with RLS
+  getConnection(orgId: string): ReturnType<typeof drizzle> {
+    // For now, we're using a single connection with RLS
+    // In the future, we can implement schema-based isolation here
     return this.defaultClient;
-  }
-
-  async closeConnections() {
-    await Promise.all([
-      ...Array.from(this.connections.values()).map(client => client.$disconnect()),
-      this.defaultClient.$disconnect()
-    ]);
   }
 }
