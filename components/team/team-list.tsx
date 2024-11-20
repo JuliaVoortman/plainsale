@@ -59,7 +59,6 @@ export function TeamList({ users, currentUserId }: TeamListProps) {
         description: "User role updated successfully",
       });
 
-      // Refresh the page to show updated roles
       window.location.reload();
     } catch (error) {
       toast({
@@ -86,7 +85,6 @@ export function TeamList({ users, currentUserId }: TeamListProps) {
         description: "Team member removed successfully",
       });
 
-      // Refresh the page to show updated team list
       window.location.reload();
     } catch (error) {
       toast({
@@ -102,7 +100,7 @@ export function TeamList({ users, currentUserId }: TeamListProps) {
 
   return (
     <>
-      <div className="rounded-md border">
+      <div className="rounded-md border border-gray-200 bg-white">
         <Table>
           <TableHeader>
             <TableRow>
@@ -129,8 +127,8 @@ export function TeamList({ users, currentUserId }: TeamListProps) {
                         <AvatarFallback>{userInitials}</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <span className="font-medium">{user.name}</span>
-                        <span className="text-sm text-muted-foreground">
+                        <span className="font-medium text-[#002447]">{user.name}</span>
+                        <span className="text-sm text-[#002447]/60">
                           {user.email}
                         </span>
                       </div>
@@ -139,17 +137,19 @@ export function TeamList({ users, currentUserId }: TeamListProps) {
                   <TableCell>
                     <Badge
                       variant="outline"
-                      className="flex w-fit items-center gap-1"
+                      className="flex w-fit items-center gap-1 border-[#53D3D1] bg-[#53D3D1]/10"
                     >
                       {user.role === "ADMIN" ? (
-                        <Shield className="h-3 w-3" />
+                        <Shield className="h-3 w-3 text-[#002447]" />
                       ) : (
-                        <UserIcon className="h-3 w-3" />
+                        <UserIcon className="h-3 w-3 text-[#002447]" />
                       )}
-                      {user.role.toLowerCase()}
+                      <span className="text-[#002447]">
+                        {user.role.toLowerCase()}
+                      </span>
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell className="text-[#002447]/60">
                     {formatDistanceToNow(new Date(user.createdAt), {
                       addSuffix: true,
                     })}
@@ -160,7 +160,7 @@ export function TeamList({ users, currentUserId }: TeamListProps) {
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
-                            className="h-8 w-8 p-0"
+                            className="h-8 w-8 p-0 hover:bg-[#002447]/5"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
