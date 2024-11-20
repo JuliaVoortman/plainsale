@@ -16,8 +16,8 @@ export function DashboardNav({ user }: DashboardNavProps) {
   
   const navigation = [
     { name: "Deal Rooms", href: "/dashboard", icon: FolderOpen },
-    { name: "Team", href: "/dashboard/team", icon: Users },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings },
+    { name: "Team", href: "/team", icon: Users },
+    { name: "Settings", href: "/settings", icon: Settings },
   ];
 
   return (
