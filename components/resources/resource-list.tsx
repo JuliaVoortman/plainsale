@@ -17,9 +17,10 @@ import { ResourcePreview } from "./resource-preview";
 
 interface ResourceListProps {
   resources: Resource[];
+  isCustomerView?: boolean;
 }
 
-export function ResourceList({ resources }: ResourceListProps) {
+export function ResourceList({ resources, isCustomerView }: ResourceListProps) {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
   if (resources.length === 0) {
@@ -46,7 +47,12 @@ export function ResourceList({ resources }: ResourceListProps) {
     <>
       <div className="space-y-6">
         {resources.map((resource) => (
-          <Card key={resource.id} className="group hover:shadow-lg transition-all">
+          <Card 
+            key={resource.id} 
+            className={`group hover:shadow-lg transition-all ${
+              isCustomerView ? 'bg-white' : 'hover:border-[#FEB249]'
+            }`}
+          >
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
