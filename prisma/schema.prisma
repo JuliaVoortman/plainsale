@@ -20,6 +20,16 @@ enum DealStatus {
   ARCHIVED
 }
 
+enum ActivityType {
+  RESOURCE_UPLOAD
+  RESOURCE_DELETE
+  MEMBER_ADD
+  MEMBER_REMOVE
+  STATUS_CHANGE
+  COMMENT_ADD
+  COMMENT_DELETE
+}
+
 model User {
   id             String    @id @default(cuid())
   name           String?
@@ -31,6 +41,7 @@ model User {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   dealRooms      DealRoom[]    @relation("DealRoomMembers")
   createdRooms   DealRoom[]    @relation("DealRoomCreator")
+  activities     Activity[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 }
@@ -58,6 +69,7 @@ model DealRoom {
   createdBy     User        @relation("DealRoomCreator", fields: [createdById], references: [id])
   members       User[]      @relation("DealRoomMembers")
   resources     Resource[]
+  activities    Activity[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
@@ -69,8 +81,22 @@ model Resource {
   url         String
   dealRoomId  String
   dealRoom    DealRoom  @relation(fields: [dealRoomId], references: [id])
+  activities  Activity[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+model Activity {
+  id          String       @id @default(cuid())
+  type        ActivityType
+  metadata    Json?
+  dealRoomId  String
+  dealRoom    DealRoom     @relation(fields: [dealRoomId], references: [id])
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  resourceId  String?
+  resource    Resource?    @relation(fields: [resourceId], references: [id])
+  createdAt   DateTime     @default(now())
 }
 
 model Invitation {

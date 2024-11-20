@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { createActivity } from "@/lib/activity";
 
-export async function POST(
+export async function PATCH(
   req: Request,
   { params }: { params: { dealRoomId: string } }
 ) {
@@ -15,28 +15,29 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { name, type, url } = await req.json();
+    const { status } = await req.json();
 
-    const resource = await prisma.resource.create({
-      data: {
-        name,
-        type,
-        url,
-        dealRoomId: params.dealRoomId,
+    const dealRoom = await prisma.dealRoom.update({
+      where: {
+        id: params.dealRoomId,
+        organizationId: session.user.organizationId,
       },
+      data: { status },
     });
 
     // Log activity
     await createActivity({
-      type: "RESOURCE_UPLOAD",
+      type: "STATUS_CHANGE",
       dealRoomId: params.dealRoomId,
       userId: session.user.id,
-      resourceId: resource.id,
+      metadata: {
+        newStatus: status,
+      },
     });
 
-    return NextResponse.json(resource);
+    return NextResponse.json(dealRoom);
   } catch (error) {
-    console.error("[RESOURCES_POST]", error);
+    console.error("[DEAL_ROOM_STATUS_PATCH]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
