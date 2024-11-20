@@ -14,6 +14,7 @@ declare module "next-auth" {
     id: string;
     role: UserRole;
     organizationId?: string;
+    image?: string | null;
   }
 }
 
