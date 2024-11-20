@@ -45,30 +45,31 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role as UserRole,
-          organizationId: user.organizationId ?? undefined,
+          role: user.role,
+          organizationId: user.organizationId,
         };
       }
     })
   ],
   callbacks: {
-    async session({ token, session }) {
-      if (token) {
-        session.user.id = token.id as string;
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.role = token.role as UserRole;
-        session.user.organizationId = token.organizationId as string | undefined;
-      }
-      return session;
-    },
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.organizationId = user.organizationId;
+        return {
+          ...token,
+          id: user.id,
+          role: user.role,
+          organizationId: user.organizationId,
+        };
       }
       return token;
+    },
+    async session({ token, session }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.role = token.role as UserRole;
+        session.user.organizationId = token.organizationId as string;
+      }
+      return session;
     }
   }
 };
