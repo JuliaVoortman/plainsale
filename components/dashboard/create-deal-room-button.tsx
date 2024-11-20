@@ -70,7 +70,7 @@ export function CreateDealRoomButton() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="bg-[#FEB249] hover:bg-[#FEB249]/90 text-[#002447] border-2 border-[#002447]">
           <Plus className="mr-2 h-4 w-4" />
           New Deal Room
         </Button>
@@ -91,6 +91,7 @@ export function CreateDealRoomButton() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter deal room name"
+                className="border-2"
               />
             </div>
             <div className="grid gap-2">
@@ -100,6 +101,7 @@ export function CreateDealRoomButton() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter deal room description"
+                className="border-2"
               />
             </div>
           </div>
@@ -109,10 +111,15 @@ export function CreateDealRoomButton() {
               variant="outline"
               onClick={() => setIsOpen(false)}
               disabled={isLoading}
+              className="border-2 border-[#002447] text-[#002447] hover:bg-[#002447]/5"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              disabled={isLoading}
+              className="bg-[#FEB249] hover:bg-[#FEB249]/90 text-[#002447] border-2 border-[#002447]"
+            >
               {isLoading ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>

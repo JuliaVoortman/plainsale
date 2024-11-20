@@ -24,7 +24,7 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
 
   if (dealRooms.length === 0) {
     return (
-      <Card className="bg-gradient-to-br from-[#002447] to-[#53D3D1] text-white border-none">
+      <Card className="bg-[#002447] text-white">
         <CardContent className="flex flex-col items-center justify-center py-12">
           <Building2 className="h-16 w-16 mb-4" />
           <p className="text-xl font-semibold mb-2">
@@ -42,11 +42,10 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {dealRooms.map((dealRoom) => (
         <Link href={`/dashboard/${dealRoom.id}`} key={dealRoom.id}>
-          <Card className="group relative overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-[#FEB249]">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#002447]/5 to-[#53D3D1]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 border-2 border-gray-100 hover:border-[#FEB249]">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl text-[#002447] group-hover:text-[#002447] transition-colors">
+                <CardTitle className="text-xl text-[#002447]">
                   {dealRoom.name}
                 </CardTitle>
                 <Badge 
@@ -54,7 +53,7 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
                   className={cn(
                     dealRoom.status === "ACTIVE" 
                       ? "bg-[#53D3D1] text-[#002447] hover:bg-[#53D3D1]/80"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : "bg-gray-100 text-[#002447] hover:bg-gray-200"
                   )}
                 >
                   {dealRoom.status.toLowerCase()}
