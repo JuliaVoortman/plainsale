@@ -14,53 +14,49 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { Plus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 
-export function CreateDealRoomButton() {
+export function InviteTeamMember() {
   const router = useRouter();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("USER");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/deal-rooms", {
+      const response = await fetch("/api/team/invite", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          description,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, role }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to create deal room");
-      }
-
-      const dealRoom = await response.json();
+      if (!response.ok) throw new Error();
 
       toast({
         title: "Success",
-        description: "Deal room created successfully",
+        description: "Invitation sent successfully",
       });
 
       setIsOpen(false);
       router.refresh();
-      router.push(`/dashboard/${dealRoom.id}`);
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to create deal room",
+        description: "Failed to send invitation",
       });
     } finally {
       setIsLoading(false);
@@ -71,36 +67,40 @@ export function CreateDealRoomButton() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          New Deal Room
+          <UserPlus className="mr-2 h-4 w-4" />
+          Invite Member
         </Button>
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={onSubmit}>
           <DialogHeader>
-            <DialogTitle>Create Deal Room</DialogTitle>
+            <DialogTitle>Invite Team Member</DialogTitle>
             <DialogDescription>
-              Create a new deal room to manage your sales opportunity
+              Send an invitation to join your team
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="email">Email address</Label>
               <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter deal room name"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter email address"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter deal room description"
-              />
+              <Label htmlFor="role">Role</Label>
+              <Select value={role} onValueChange={setRole}>
+                <SelectTrigger id="role">
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USER">User</SelectItem>
+                  <SelectItem value="ADMIN">Admin</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
@@ -113,7 +113,7 @@ export function CreateDealRoomButton() {
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Creating..." : "Create"}
+              {isLoading ? "Sending..." : "Send invitation"}
             </Button>
           </DialogFooter>
         </form>

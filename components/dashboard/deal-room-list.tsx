@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
+import { DealRoom } from "@prisma/client";
+import { formatDistanceToNow } from "date-fns";
 import {
   Card,
   CardContent,
@@ -8,57 +11,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DealRoom } from "@prisma/client";
-import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
+import { Building2, FileText, Users } from "lucide-react";
 
-export function DealRoomList() {
-  const [dealRooms, setDealRooms] = useState<DealRoom[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+interface DealRoomListProps {
+  initialDealRooms: DealRoom[];
+}
 
-  useEffect(() => {
-    async function fetchDealRooms() {
-      try {
-        const response = await fetch("/api/deal-rooms");
-        const data = await response.json();
-        setDealRooms(data);
-      } catch (error) {
-        console.error("Failed to fetch deal rooms:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchDealRooms();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {[...Array(3)].map((_, i) => (
-          <Card key={i} className="group relative overflow-hidden transition-all hover:shadow-xl">
-            <CardHeader>
-              <Skeleton className="h-6 w-1/2" />
-              <Skeleton className="h-4 w-3/4" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-4 w-1/4 mb-2" />
-              <Skeleton className="h-4 w-1/2" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  }
+export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
+  const [dealRooms] = useState<DealRoom[]>(initialDealRooms);
 
   if (dealRooms.length === 0) {
     return (
       <Card className="bg-gradient-to-br from-orange-100 to-yellow-100 border-none">
         <CardContent className="flex flex-col items-center justify-center py-12">
+          <Building2 className="h-16 w-16 text-primary mb-4" />
           <p className="text-xl font-semibold text-primary mb-2">
-            No deal rooms found
+            No deal rooms yet
           </p>
           <p className="text-muted-foreground">
             Create your first deal room to get started
@@ -88,9 +58,19 @@ export function DealRoomList() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Created {formatDistanceToNow(new Date(dealRoom.createdAt), { addSuffix: true })}
-              </p>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <FileText className="h-4 w-4" />
+                  <span>0 files</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Users className="h-4 w-4" />
+                  <span>0 members</span>
+                </div>
+                <div className="flex-1 text-right">
+                  {formatDistanceToNow(new Date(dealRoom.createdAt), { addSuffix: true })}
+                </div>
+              </div>
             </CardContent>
           </Card>
         </Link>

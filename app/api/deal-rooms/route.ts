@@ -43,6 +43,11 @@ export async function POST(req: Request) {
         description,
         organizationId: session.user.organizationId,
         createdById: session.user.id,
+        members: {
+          connect: {
+            id: session.user.id,
+          },
+        },
       },
     });
 
