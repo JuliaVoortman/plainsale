@@ -41,15 +41,17 @@ export function EarlyAccessForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3">
-      <Input
-        type="email"
-        placeholder="Enter your work email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="h-12 border-2 border-[#002447] bg-white"
-        required
-      />
+    <form onSubmit={onSubmit} className="flex flex-col sm:flex-row items-center gap-3">
+      <div className="flex items-center gap-3 flex-1">
+        <span className="text-[#002447] font-medium whitespace-nowrap">Email address:</span>
+        <Input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="input-field"
+          required
+        />
+      </div>
       <Button 
         type="submit" 
         disabled={isLoading} 

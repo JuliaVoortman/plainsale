@@ -1,31 +1,42 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
-import { Zap } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 
 export const metadata: Metadata = {
-  title: "Login - DealRoom",
+  title: "Login - Plainsale",
   description: "Login to your account",
 };
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen grid lg:grid-cols-2">
-      {/* Left side - Form */}
-      <div className="flex items-center justify-center p-8">
-        <div className="mx-auto w-full max-w-sm">
-          <Link href="/" className="flex items-center gap-2 mb-8">
-            <Zap className="h-6 w-6 text-[#FEB249]" />
-            <span className="font-bold text-xl">DealRoom</span>
-          </Link>
-          <div className="flex flex-col space-y-2">
-            <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-            <p className="text-sm text-muted-foreground">
+    <div className="min-h-screen bg-[#fafafa]">
+      <header className="border-b">
+        <div className="container mx-auto px-4">
+          <div className="flex h-16 items-center">
+            <Link href="/" className="flex items-center space-x-2">
+              <Logo className="w-32 h-auto" />
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto flex flex-col items-center justify-center px-4 py-24">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-semibold tracking-tight text-[#002447]">
+              Welcome back
+            </h1>
+            <p className="text-sm text-[#002447]/60">
               Enter your credentials to access your account
             </p>
           </div>
-          <LoginForm />
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+
+          <div className="bg-white p-8 rounded-lg border-2 border-[#002447]/10">
+            <LoginForm />
+          </div>
+
+          <p className="text-center text-sm text-[#002447]/60">
             Don't have an account?{" "}
             <Link 
               href="/register" 
@@ -35,23 +46,7 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-      </div>
-
-      {/* Right side - Gradient Background */}
-      <div className="hidden lg:block relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#002447] to-[#FEB249]" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2069&auto=format&fit=crop')] mix-blend-overlay opacity-20" />
-        <div className="absolute inset-0 flex items-center justify-center text-white p-12">
-          <div className="max-w-lg">
-            <h2 className="text-3xl font-bold mb-4">
-              Streamline Your Deal Management
-            </h2>
-            <p className="text-lg text-white/80">
-              Securely manage and share resources with your team and clients in one centralized platform.
-            </p>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

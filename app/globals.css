@@ -34,36 +34,6 @@
     
     --radius: 0.75rem;
   }
- 
-  .dark {
-    --background: 210 100% 14%;
-    --foreground: 0 0% 100%;
-    
-    --card: 210 100% 14%;
-    --card-foreground: 0 0% 100%;
-    
-    --popover: 210 100% 14%;
-    --popover-foreground: 0 0% 100%;
-    
-    --primary: 0 0% 100%;
-    --primary-foreground: 210 100% 14%;
-    
-    --secondary: 183 58% 57%;
-    --secondary-foreground: 210 100% 14%;
-    
-    --accent: 32 99% 64%;
-    --accent-foreground: 210 100% 14%;
-    
-    --muted: 210 40% 20%;
-    --muted-foreground: 210 40% 80%;
-    
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    
-    --border: 210 40% 20%;
-    --input: 210 40% 20%;
-    --ring: 32 99% 64%;
-  }
 }
 
 @layer base {
@@ -75,25 +45,29 @@
   }
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #002447 0%, #53D3D1 100%);
-}
+@layer components {
+  .input-field {
+    @apply h-12 px-4 bg-white text-[#002447] outline-none transition-all duration-200;
+    @apply border-2 border-[#002447] rounded-md;
+  }
+  
+  .input-field:focus {
+    @apply outline-none border-[#FEB249];
+  }
+  
+  .input-field::placeholder {
+    @apply text-[#002447]/60;
+  }
 
-.feature-card {
-  @apply relative overflow-hidden rounded-2xl p-8 transition-all hover:scale-105;
-  background: linear-gradient(135deg, #002447 0%, #53D3D1 100%);
-}
+  /* Reset default input styles */
+  input.input-field {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
 
-.feature-card.orange {
-  background: linear-gradient(135deg, #FEB249 0%, #53D3D1 100%);
-}
-
-.feature-card.pink {
-  background: linear-gradient(135deg, #FBECEB 0%, #53D3D1 100%);
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* Ensure consistent height across browsers */
+  input.input-field {
+    line-height: normal;
+  }
 }

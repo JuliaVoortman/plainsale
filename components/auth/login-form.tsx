@@ -66,18 +66,18 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-[#002447] font-medium">Email address</FormLabel>
               <FormControl>
                 <Input 
                   placeholder="name@example.com" 
                   {...field}
-                  className="h-11"
+                  className="input-field"
                 />
               </FormControl>
               <FormMessage />
@@ -89,12 +89,12 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-[#002447] font-medium">Password</FormLabel>
               <FormControl>
                 <Input 
                   type="password" 
                   {...field}
-                  className="h-11"
+                  className="input-field"
                 />
               </FormControl>
               <FormMessage />
@@ -102,7 +102,7 @@ export function LoginForm() {
           )}
         />
         <Button 
-          className="w-full h-11 bg-[#002447] hover:bg-[#002447]/90 text-white" 
+          className="w-full h-12 bg-[#FEB249] hover:bg-[#FEB249]/90 text-[#002447] font-semibold border-2 border-[#002447]" 
           type="submit" 
           disabled={isLoading}
         >
