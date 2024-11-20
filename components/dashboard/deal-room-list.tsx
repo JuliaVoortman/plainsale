@@ -24,10 +24,10 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
 
   if (dealRooms.length === 0) {
     return (
-      <Card className="bg-[#002447] text-white">
+      <Card className="bg-gradient-to-br from-[#002447] to-[#53D3D1]">
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <Building2 className="h-16 w-16 mb-4" />
-          <p className="text-xl font-semibold mb-2">
+          <Building2 className="h-16 w-16 mb-4 text-white" />
+          <p className="text-xl font-semibold mb-2 text-white">
             No deal rooms yet
           </p>
           <p className="text-white/80">
@@ -42,7 +42,7 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {dealRooms.map((dealRoom) => (
         <Link href={`/dashboard/${dealRoom.id}`} key={dealRoom.id}>
-          <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 border-2 border-gray-100 hover:border-[#FEB249]">
+          <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 border-2 border-gray-100 hover:border-[#FEB249] bg-white">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-xl text-[#002447]">
@@ -51,6 +51,7 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
                 <Badge 
                   variant={dealRoom.status === "ACTIVE" ? "default" : "secondary"}
                   className={cn(
+                    "font-medium",
                     dealRoom.status === "ACTIVE" 
                       ? "bg-[#53D3D1] text-[#002447] hover:bg-[#53D3D1]/80"
                       : "bg-gray-100 text-[#002447] hover:bg-gray-200"
