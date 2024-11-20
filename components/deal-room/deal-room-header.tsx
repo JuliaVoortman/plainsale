@@ -24,6 +24,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { ShareDealRoom } from "./share-deal-room";
+import { cn } from "@/lib/utils";
 
 interface DealRoomHeaderProps {
   dealRoom: DealRoom & {
