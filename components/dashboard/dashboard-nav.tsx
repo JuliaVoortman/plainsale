@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, FolderOpen, Settings, Users } from "lucide-react";
+import { FolderOpen, Settings, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserNav } from "@/components/dashboard/user-nav";
 import { User } from "next-auth";
+import { Logo } from "@/components/ui/logo";
 
 interface DashboardNavProps {
   user: User;
@@ -24,11 +25,8 @@ export function DashboardNav({ user }: DashboardNavProps) {
     <header className="sticky top-0 z-50 w-full border-b bg-white">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="flex items-center space-x-2">
-            <Building2 className="h-8 w-8 text-[#FEB249]" />
-            <span className="font-bold text-2xl text-[#002447]">
-              plainsale
-            </span>
+          <Link href="/dashboard">
+            <Logo className="w-32 h-auto" />
           </Link>
           <nav className="hidden md:flex items-center space-x-2">
             {navigation.map((item) => {

@@ -49,7 +49,6 @@ export function InviteTeamMember() {
 
       const data = await response.json();
 
-      // Show invite link if email sending is not configured
       if (data.invitation?.token) {
         setInviteLink(`${window.location.origin}/invite/${data.invitation.token}`);
       }
@@ -72,13 +71,6 @@ export function InviteTeamMember() {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  function handleClose() {
-    setIsOpen(false);
-    setInviteLink("");
-    setEmail("");
-    setRole("USER");
   }
 
   return (
@@ -140,14 +132,14 @@ export function InviteTeamMember() {
             <Button
               type="button"
               variant="outline"
-              onClick={handleClose}
+              onClick={() => setIsOpen(false)}
               disabled={isLoading}
             >
-              {inviteLink ? "Done" : "Cancel"}
+              Cancel
             </Button>
             {!inviteLink && (
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Creating..." : "Create invitation"}
+                {isLoading ? "Creating..." : "Send Invitation"}
               </Button>
             )}
           </DialogFooter>

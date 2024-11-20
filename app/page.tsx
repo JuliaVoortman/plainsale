@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Zap } from "lucide-react";
 import { EarlyAccessForm } from "@/components/marketing/early-access-form";
+import { Logo } from "@/components/ui/logo";
 
 export const metadata: Metadata = {
   title: "Plainsale - AI-Powered Deal Management",
@@ -15,8 +15,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-              <Zap className="h-8 w-8 text-[#FEB249]" />
-              <span className="font-bold text-2xl text-[#002447]">plainsale</span>
+              <Logo className="w-32 h-auto" />
             </Link>
             <Link href="/login">
               <Button 
