@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Only initialize Resend if API key is available
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function POST(req: Request) {
   try {
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
     });
 
     // Store invitation
-    await prisma.invitation.create({
+    const invitation = await prisma.invitation.create({
       data: {
         email,
         role,
@@ -43,20 +44,34 @@ export async function POST(req: Request) {
       },
     });
 
-    // Send invitation email
-    await resend.emails.send({
-      from: "DealRoom <noreply@dealroom.com>",
-      to: email,
-      subject: `Invitation to join ${organization?.name} on DealRoom`,
-      html: `
-        <p>You've been invited to join ${organization?.name} on DealRoom.</p>
-        <p>Click the link below to accept the invitation:</p>
-        <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}">Accept Invitation</a></p>
-        <p>This invitation will expire in 7 days.</p>
-      `,
-    });
+    // Send invitation email if Resend is configured
+    if (resend) {
+      try {
+        await resend.emails.send({
+          from: "DealRoom <noreply@dealroom.com>",
+          to: email,
+          subject: `Invitation to join ${organization?.name} on DealRoom`,
+          html: `
+            <p>You've been invited to join ${organization?.name} on DealRoom.</p>
+            <p>Click the link below to accept the invitation:</p>
+            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}">Accept Invitation</a></p>
+            <p>This invitation will expire in 7 days.</p>
+          `,
+        });
+      } catch (error) {
+        console.error("Failed to send invitation email:", error);
+        // Continue without email sending
+      }
+    }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      invitation: {
+        id: invitation.id,
+        email: invitation.email,
+        token: invitation.token,
+      },
+    });
   } catch (error) {
     console.error("[TEAM_INVITE_POST]", error);
     return new NextResponse("Internal error", { status: 500 });

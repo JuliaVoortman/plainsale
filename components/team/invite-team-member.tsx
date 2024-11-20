@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { UserPlus } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function InviteTeamMember() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export function InviteTeamMember() {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("USER");
+  const [inviteLink, setInviteLink] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,22 +47,38 @@ export function InviteTeamMember() {
 
       if (!response.ok) throw new Error();
 
+      const data = await response.json();
+
+      // Show invite link if email sending is not configured
+      if (data.invitation?.token) {
+        setInviteLink(`${window.location.origin}/invite/${data.invitation.token}`);
+      }
+
       toast({
         title: "Success",
-        description: "Invitation sent successfully",
+        description: "Invitation created successfully",
       });
 
-      setIsOpen(false);
-      router.refresh();
+      if (!data.invitation?.token) {
+        setIsOpen(false);
+        router.refresh();
+      }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send invitation",
+        description: "Failed to create invitation",
       });
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function handleClose() {
+    setIsOpen(false);
+    setInviteLink("");
+    setEmail("");
+    setRole("USER");
   }
 
   return (
@@ -80,41 +98,58 @@ export function InviteTeamMember() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter email address"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="role">Role</Label>
-              <Select value={role} onValueChange={setRole}>
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="USER">User</SelectItem>
-                  <SelectItem value="ADMIN">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {inviteLink ? (
+              <Alert>
+                <AlertDescription>
+                  <p className="mb-2">Share this invitation link with the team member:</p>
+                  <Input
+                    readOnly
+                    value={inviteLink}
+                    onClick={(e) => e.currentTarget.select()}
+                  />
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <>
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter email address"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="role">Role</Label>
+                  <Select value={role} onValueChange={setRole}>
+                    <SelectTrigger id="role">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USER">User</SelectItem>
+                      <SelectItem value="ADMIN">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
           </div>
           <DialogFooter>
             <Button
               type="button"
               variant="outline"
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
               disabled={isLoading}
             >
-              Cancel
+              {inviteLink ? "Done" : "Cancel"}
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Sending..." : "Send invitation"}
-            </Button>
+            {!inviteLink && (
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Creating..." : "Create invitation"}
+              </Button>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>
