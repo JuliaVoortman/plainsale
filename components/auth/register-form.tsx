@@ -99,9 +99,13 @@ export function RegisterForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel className="text-[#002447] font-medium">Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" {...field} />
+                <Input 
+                  placeholder="John Doe" 
+                  className="input-field" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -112,9 +116,13 @@ export function RegisterForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-[#002447] font-medium">Email</FormLabel>
               <FormControl>
-                <Input placeholder="name@example.com" {...field} />
+                <Input 
+                  placeholder="name@example.com" 
+                  className="input-field" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -125,9 +133,13 @@ export function RegisterForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-[#002447] font-medium">Password</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input 
+                  type="password" 
+                  className="input-field" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -138,9 +150,13 @@ export function RegisterForm() {
           name="organizationName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Organization Name</FormLabel>
+              <FormLabel className="text-[#002447] font-medium">Organization Name</FormLabel>
               <FormControl>
-                <Input placeholder="Acme Inc." {...field} />
+                <Input 
+                  placeholder="Acme Inc." 
+                  className="input-field" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -151,15 +167,23 @@ export function RegisterForm() {
           name="organizationDomain"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Organization Domain</FormLabel>
+              <FormLabel className="text-[#002447] font-medium">Organization Domain</FormLabel>
               <FormControl>
-                <Input placeholder="acme.com" {...field} />
+                <Input 
+                  placeholder="acme.com" 
+                  className="input-field" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit" disabled={isLoading}>
+        <Button 
+          className="w-full h-12 bg-[#FEB249] hover:bg-[#FEB249]/90 text-[#002447] font-semibold border-2 border-[#002447]" 
+          type="submit" 
+          disabled={isLoading}
+        >
           {isLoading ? "Creating account..." : "Create account"}
         </Button>
       </form>
