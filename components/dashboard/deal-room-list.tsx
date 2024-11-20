@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Building2, FileText, Users } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface DealRoomListProps {
   initialDealRooms: DealRoom[];
