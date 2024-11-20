@@ -7,7 +7,7 @@ import { DealRoomList } from "@/components/dashboard/deal-room-list";
 import { CreateDealRoomButton } from "@/components/dashboard/create-deal-room-button";
 
 export const metadata: Metadata = {
-  title: "Dashboard - DealRoom",
+  title: "Dashboard - Plainsale",
   description: "Manage your deal rooms",
 };
 
@@ -28,11 +28,13 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="flex-1 space-y-4 p-4 pt-6">
+    <div className="flex-1 space-y-8 p-8 pt-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Deal Rooms</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-3xl font-bold tracking-tight text-[#002447]">
+            Deal Rooms
+          </h2>
+          <p className="text-[#002447]/60">
             Manage and track your active deals
           </p>
         </div>
