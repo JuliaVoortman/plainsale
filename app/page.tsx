@@ -11,20 +11,18 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center">
-          <div className="mr-4 flex">
-            <Link href="/" className="mr-6 flex items-center space-x-2">
-              <Zap className="h-8 w-8 text-primary" />
+        <div className="container mx-auto px-4">
+          <div className="flex h-16 items-center justify-between">
+            <Link href="/" className="flex items-center space-x-2">
+              <Zap className="h-8 w-8 text-[#FEB249]" />
               <span className="font-bold text-xl">DealRoom</span>
             </Link>
-          </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
             <nav className="flex items-center space-x-4">
               <Link href="/login">
                 <Button variant="ghost" className="font-medium">Login</Button>
               </Link>
               <Link href="/register">
-                <Button className="font-medium shadow-lg hover:shadow-xl transition-all">
+                <Button className="bg-[#002447] hover:bg-[#002447]/90 text-white font-medium">
                   Get Started
                 </Button>
               </Link>
@@ -35,35 +33,36 @@ export default function Home() {
 
       <main className="flex-1">
         <section className="gradient-bg py-20 md:py-32">
-          <div className="container flex max-w-[64rem] flex-col items-center gap-6 text-center">
-            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white">
-              Close Deals Faster with
-              <span className="block text-yellow-300">Secure Deal Management</span>
-            </h1>
-            <p className="max-w-[42rem] leading-normal text-white/80 sm:text-xl sm:leading-8">
-              Streamline your sales process with our enterprise-grade deal room platform. 
-              Share resources securely and accelerate your pipeline.
-            </p>
-            <div className="space-x-4">
-              <Link href="/register">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-xl">
-                  Start Free Trial
-                </Button>
-              </Link>
-              <Link href="/demo">
-                <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
-                  View Demo
-                </Button>
-              </Link>
+          <div className="container mx-auto px-4">
+            <div className="max-w-[64rem] mx-auto text-center">
+              <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white mb-6">
+                Close Deals Faster with
+                <span className="block text-[#FEB249]">Secure Deal Management</span>
+              </h1>
+              <p className="max-w-[42rem] mx-auto leading-normal text-white/80 sm:text-xl sm:leading-8 mb-8">
+                Streamline your sales process with our enterprise-grade deal room platform. 
+                Share resources securely and accelerate your pipeline.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link href="/register">
+                  <Button size="lg" className="w-full sm:w-auto bg-[#FEB249] hover:bg-[#FEB249]/90 text-[#002447] font-semibold">
+                    Start Free Trial
+                  </Button>
+                </Link>
+                <Link href="/demo">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white hover:bg-white/10">
+                    View Demo
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="container py-20">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="group relative overflow-hidden rounded-2xl bg-primary p-8 transition-all hover:scale-105">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary to-orange-500 opacity-90"></div>
-              <div className="relative z-10 h-full flex flex-col">
+        <section className="py-20 container mx-auto px-4">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="feature-card">
+              <div className="relative z-10">
                 <Shield className="h-12 w-12 text-white mb-4" />
                 <h3 className="text-2xl font-bold text-white mb-2">Enterprise Security</h3>
                 <p className="text-white/80">
@@ -72,9 +71,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="group relative overflow-hidden rounded-2xl bg-orange-500 p-8 transition-all hover:scale-105">
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-yellow-500 opacity-90"></div>
-              <div className="relative z-10 h-full flex flex-col">
+            <div className="feature-card orange">
+              <div className="relative z-10">
                 <Users className="h-12 w-12 text-white mb-4" />
                 <h3 className="text-2xl font-bold text-white mb-2">Team Collaboration</h3>
                 <p className="text-white/80">
@@ -83,9 +81,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="group relative overflow-hidden rounded-2xl bg-yellow-500 p-8 transition-all hover:scale-105">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500 to-primary opacity-90"></div>
-              <div className="relative z-10 h-full flex flex-col">
+            <div className="feature-card blue">
+              <div className="relative z-10">
                 <Building2 className="h-12 w-12 text-white mb-4" />
                 <h3 className="text-2xl font-bold text-white mb-2">Custom Branding</h3>
                 <p className="text-white/80">
@@ -97,12 +94,14 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t py-8 bg-gray-50">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-            <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-              Built with ❤️ for enterprise sales teams
-            </p>
+      <footer className="border-t py-8 bg-[#002447] text-white">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <div className="flex flex-col items-center gap-4 md:flex-row md:gap-2">
+              <p className="text-center text-sm leading-loose md:text-left">
+                Built with ❤️ for enterprise sales teams
+              </p>
+            </div>
           </div>
         </div>
       </footer>

@@ -17,11 +17,11 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
   return (
     <div className="flex min-h-screen flex-col">
       <DashboardNav user={session.user} />
-      <div className="flex-1">
-        <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
+      <main className="flex-1 container mx-auto px-4 py-6">
+        <div className="flex-1 space-y-4">
           {children}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

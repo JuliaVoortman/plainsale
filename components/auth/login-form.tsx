@@ -66,7 +66,7 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-8">
         <FormField
           control={form.control}
           name="email"
@@ -74,7 +74,11 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="name@example.com" {...field} />
+                <Input 
+                  placeholder="name@example.com" 
+                  {...field}
+                  className="h-11"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -87,13 +91,21 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input 
+                  type="password" 
+                  {...field}
+                  className="h-11"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit" disabled={isLoading}>
+        <Button 
+          className="w-full h-11 bg-[#002447] hover:bg-[#002447]/90 text-white" 
+          type="submit" 
+          disabled={isLoading}
+        >
           {isLoading ? "Signing in..." : "Sign in"}
         </Button>
       </form>

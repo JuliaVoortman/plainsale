@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Building2, FileText, Users } from "lucide-react";
 
 interface DealRoomListProps {
@@ -24,13 +23,13 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
 
   if (dealRooms.length === 0) {
     return (
-      <Card className="bg-gradient-to-br from-orange-100 to-yellow-100 border-none">
+      <Card className="bg-gradient-to-br from-[#002447] to-[#53D3D1] border-none">
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <Building2 className="h-16 w-16 text-primary mb-4" />
-          <p className="text-xl font-semibold text-primary mb-2">
+          <Building2 className="h-16 w-16 text-white mb-4" />
+          <p className="text-xl font-semibold text-white mb-2">
             No deal rooms yet
           </p>
-          <p className="text-muted-foreground">
+          <p className="text-white/80">
             Create your first deal room to get started
           </p>
         </CardContent>
@@ -42,11 +41,11 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {dealRooms.map((dealRoom) => (
         <Link href={`/dashboard/${dealRoom.id}`} key={dealRoom.id}>
-          <Card className="group relative overflow-hidden transition-all hover:shadow-xl hover:scale-105 cursor-pointer">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Card className="group relative overflow-hidden transition-all hover:shadow-xl hover:scale-105 cursor-pointer border-2 border-transparent hover:border-[#FEB249]">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#002447]/5 to-[#53D3D1]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                <CardTitle className="text-xl group-hover:text-[#002447] transition-colors">
                   {dealRoom.name}
                 </CardTitle>
                 <Badge variant={dealRoom.status === "ACTIVE" ? "default" : "secondary"}>
