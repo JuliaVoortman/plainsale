@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Resource } from "@prisma/client";
 import {
   Dialog,
   DialogContent,
@@ -10,12 +11,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import * as pdfjsLib from "pdfjs-dist";
-import { Resource } from "@prisma/client";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import Image from "next/image";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface ResourcePreviewProps {
-  resource: Resource;
+  resource: Resource & { contentType?: string };
   isOpen: boolean;
   onClose: () => void;
 }
@@ -27,8 +29,12 @@ export function ResourcePreview({ resource, isOpen, onClose }: ResourcePreviewPr
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(0);
 
+  const isImage = resource.contentType?.startsWith('image/');
+  const isVideo = resource.contentType?.startsWith('video/');
+  const isPDF = resource.contentType === 'application/pdf';
+
   useEffect(() => {
-    if (!isOpen || !resource.url) return;
+    if (!isOpen || !resource.url || !isPDF) return;
 
     async function loadPDF() {
       try {
@@ -63,12 +69,12 @@ export function ResourcePreview({ resource, isOpen, onClose }: ResourcePreviewPr
       }
     }
 
-    if (resource.type === "PDF") {
+    if (isPDF) {
       loadPDF();
     } else {
       setIsLoading(false);
     }
-  }, [isOpen, resource.url, resource.type, currentPage]);
+  }, [isOpen, resource.url, isPDF, currentPage]);
 
   function handleDownload() {
     window.open(resource.url, "_blank");
@@ -93,7 +99,7 @@ export function ResourcePreview({ resource, isOpen, onClose }: ResourcePreviewPr
                 Download Instead
               </Button>
             </div>
-          ) : resource.type === "PDF" ? (
+          ) : isPDF ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -124,6 +130,41 @@ export function ResourcePreview({ resource, isOpen, onClose }: ResourcePreviewPr
               </div>
               <div className="flex justify-center overflow-auto">
                 <canvas ref={canvasRef} className="max-h-[600px]" />
+              </div>
+            </div>
+          ) : isImage ? (
+            <div className="space-y-4">
+              <AspectRatio ratio={16 / 9} className="bg-muted">
+                <Image
+                  src={resource.url}
+                  alt={resource.name}
+                  fill
+                  className="rounded-md object-contain"
+                />
+              </AspectRatio>
+              <div className="flex justify-end">
+                <Button variant="outline" size="sm" onClick={handleDownload}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
+              </div>
+            </div>
+          ) : isVideo ? (
+            <div className="space-y-4">
+              <AspectRatio ratio={16 / 9}>
+                <video
+                  src={resource.url}
+                  controls
+                  className="h-full w-full rounded-md"
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </AspectRatio>
+              <div className="flex justify-end">
+                <Button variant="outline" size="sm" onClick={handleDownload}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
               </div>
             </div>
           ) : (

@@ -1,112 +1,12 @@
-// This is your Prisma schema file
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-enum UserRole {
-  ADMIN
-  USER
-}
-
-enum DealStatus {
-  ACTIVE
-  CLOSED
-  ARCHIVED
-}
-
-enum ActivityType {
-  RESOURCE_UPLOAD
-  RESOURCE_DELETE
-  MEMBER_ADD
-  MEMBER_REMOVE
-  STATUS_CHANGE
-  COMMENT_ADD
-  COMMENT_DELETE
-}
-
-model User {
-  id             String    @id @default(cuid())
-  name           String?
-  email          String    @unique
-  password       String?
-  image          String?
-  role           UserRole  @default(USER)
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  dealRooms      DealRoom[]    @relation("DealRoomMembers")
-  createdRooms   DealRoom[]    @relation("DealRoomCreator")
-  activities     Activity[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-}
-
-model Organization {
-  id          String    @id @default(cuid())
-  name        String
-  domain      String    @unique
-  branding    Json?
-  users       User[]
-  dealRooms   DealRoom[]
-  invitations Invitation[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-
-model DealRoom {
-  id            String      @id @default(cuid())
-  name          String
-  description   String?
-  status        DealStatus  @default(ACTIVE)
-  organizationId String
-  organization  Organization @relation(fields: [organizationId], references: [id])
-  createdById   String
-  createdBy     User        @relation("DealRoomCreator", fields: [createdById], references: [id])
-  members       User[]      @relation("DealRoomMembers")
-  resources     Resource[]
-  activities    Activity[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-}
-
+// Add to existing schema
 model Resource {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   type        String
   url         String
+  contentType String?  // Add this field
   dealRoomId  String
-  dealRoom    DealRoom  @relation(fields: [dealRoomId], references: [id])
-  activities  Activity[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-
-model Activity {
-  id          String       @id @default(cuid())
-  type        ActivityType
-  metadata    Json?
-  dealRoomId  String
-  dealRoom    DealRoom     @relation(fields: [dealRoomId], references: [id])
-  userId      String
-  user        User         @relation(fields: [userId], references: [id])
-  resourceId  String?
-  resource    Resource?    @relation(fields: [resourceId], references: [id])
-  createdAt   DateTime     @default(now())
-}
-
-model Invitation {
-  id            String    @id @default(cuid())
-  email         String
-  role          UserRole
-  token         String    @unique
-  organizationId String
-  organization  Organization @relation(fields: [organizationId], references: [id])
-  expiresAt     DateTime
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  dealRoom    DealRoom @relation(fields: [dealRoomId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

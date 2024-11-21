@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
-import { createActivity } from "@/lib/activity";
+import { createTimelineEvent } from "@/lib/timeline";
 
 export async function PATCH(
   req: Request,
@@ -25,14 +25,18 @@ export async function PATCH(
       data: { status },
     });
 
-    // Log activity
-    await createActivity({
+    // Create timeline event
+    await createTimelineEvent({
       type: "STATUS_CHANGE",
-      dealRoomId: params.dealRoomId,
-      userId: session.user.id,
+      title: "Status changed",
+      description: `Deal room status changed to ${status.toLowerCase()}`,
       metadata: {
         newStatus: status,
+        previousStatus: dealRoom.status,
       },
+      dealRoomId: params.dealRoomId,
+      userId: session.user.id,
+      isInternal: true, // Status changes are internal events
     });
 
     return NextResponse.json(dealRoom);
