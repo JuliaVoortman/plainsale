@@ -8,7 +8,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'DealRoom - Enterprise Sales Platform',
+  title: 'Plainsale - AI-Powered Deal Management',
   description: 'Secure deal room platform for enterprise sales teams',
 };
 
