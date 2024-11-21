@@ -1,6 +1,6 @@
 "use client";
 
-import { DealRoom } from "@prisma/client";
+import { DealRoom, User } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
