@@ -1,12 +1,12 @@
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { validateProspectAccess } from "@/lib/access-control";
 import { sendEmail } from "@/lib/email";
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { dealRoomId: string } }
 ) {
   try {
