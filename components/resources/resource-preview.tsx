@@ -17,7 +17,7 @@ import Image from "next/image";
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface ResourcePreviewProps {
-  resource: Resource & { contentType?: string };
+  resource: Resource;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -29,9 +29,10 @@ export function ResourcePreview({ resource, isOpen, onClose }: ResourcePreviewPr
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(0);
 
-  const isImage = resource.contentType?.startsWith('image/');
-  const isVideo = resource.contentType?.startsWith('video/');
-  const isPDF = resource.contentType === 'application/pdf';
+  const contentType = resource.contentType || resource.type;
+  const isImage = contentType?.startsWith('image/');
+  const isVideo = contentType?.startsWith('video/');
+  const isPDF = contentType === 'application/pdf';
 
   useEffect(() => {
     if (!isOpen || !resource.url || !isPDF) return;
