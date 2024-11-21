@@ -15,6 +15,11 @@ type TimelineEventWithRelations = TimelineEvent & {
   resource?: Resource | null;
 };
 
+interface TimelineEventMetadata {
+  actionUrl?: string;
+  [key: string]: any;
+}
+
 interface TimelineFeedProps {
   initialEvents: TimelineEventWithRelations[];
   dealRoomId: string;
@@ -92,6 +97,8 @@ export function TimelineFeed({ initialEvents, dealRoomId, isCustomerView }: Time
           .join("")
           .toUpperCase();
 
+        const metadata = event.metadata as TimelineEventMetadata;
+
         return (
           <div key={event.id} className="flex gap-4">
             <Avatar className="h-8 w-8">
@@ -113,12 +120,12 @@ export function TimelineFeed({ initialEvents, dealRoomId, isCustomerView }: Time
                     {formatDistanceToNow(new Date(event.createdAt), { addSuffix: true })}
                   </p>
                 </div>
-                {event.metadata?.actionUrl && !isCustomerView && (
+                {metadata?.actionUrl && !isCustomerView && (
                   <Button
                     variant="outline"
                     size="sm"
                     className="text-[#002447] border-[#002447] hover:bg-[#002447]/5"
-                    onClick={() => window.open(event.metadata.actionUrl, "_blank")}
+                    onClick={() => window.open(metadata.actionUrl, "_blank")}
                   >
                     View
                   </Button>
