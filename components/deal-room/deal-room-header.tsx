@@ -1,6 +1,6 @@
 "use client";
 
-import { DealRoom, User } from "@prisma/client";
+import { DealRoom } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
@@ -68,7 +68,7 @@ export function DealRoomHeader({ dealRoom }: DealRoomHeaderProps) {
 
   return (
     <div className="border-b bg-white">
-      <div className="container py-6">
+      <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export function DealRoomHeader({ dealRoom }: DealRoomHeaderProps) {
               onClick={() => setIsShareOpen(true)}
             >
               <Share2 className="mr-2 h-4 w-4" />
-              Share
+              Invite
             </Button>
 
             <Button 

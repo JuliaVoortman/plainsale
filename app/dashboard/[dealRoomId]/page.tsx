@@ -63,21 +63,17 @@ export default async function DealRoomPage({ params }: DealRoomPageProps) {
   }
 
   return (
-    <div className="flex-1 bg-white">
+    <div className="flex-1 space-y-8 bg-white">
       <DealRoomHeader dealRoom={dealRoom} />
       
-      <Tabs defaultValue="internal" className="space-y-6">
-        <div className="sticky top-[65px] z-40 bg-white border-b">
-          <div className="container mx-auto px-4">
-            <TabsList className="h-14">
-              <TabsTrigger value="internal" className="text-[#002447]">Internal View</TabsTrigger>
-              <TabsTrigger value="customer" className="text-[#002447]">Customer View</TabsTrigger>
-            </TabsList>
-          </div>
-        </div>
+      <div className="container mx-auto px-4">
+        <Tabs defaultValue="internal" className="space-y-6">
+          <TabsList className="bg-muted/50">
+            <TabsTrigger value="internal" className="text-[#002447]">Internal View</TabsTrigger>
+            <TabsTrigger value="customer" className="text-[#002447]">Customer View</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="internal">
-          <div className="container mx-auto px-4">
+          <TabsContent value="internal">
             <Tabs defaultValue="timeline" className="space-y-6">
               <TabsList className="w-full justify-start border-b rounded-none p-0 h-12">
                 <TabsTrigger value="timeline" className="data-[state=active]:border-b-2 data-[state=active]:border-[#002447] rounded-none">
@@ -132,11 +128,9 @@ export default async function DealRoomPage({ params }: DealRoomPageProps) {
                 </Card>
               </TabsContent>
             </Tabs>
-          </div>
-        </TabsContent>
+          </TabsContent>
 
-        <TabsContent value="customer">
-          <div className="container mx-auto px-4">
+          <TabsContent value="customer">
             <Tabs defaultValue="resources" className="space-y-6">
               <TabsList className="w-full justify-start border-b rounded-none p-0 h-12">
                 <TabsTrigger value="resources" className="data-[state=active]:border-b-2 data-[state=active]:border-[#002447] rounded-none">
@@ -164,9 +158,9 @@ export default async function DealRoomPage({ params }: DealRoomPageProps) {
                 </Card>
               </TabsContent>
             </Tabs>
-          </div>
-        </TabsContent>
-      </Tabs>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }

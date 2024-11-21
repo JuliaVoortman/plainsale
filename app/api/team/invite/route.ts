@@ -2,10 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
-import { Resend } from "resend";
-
-// Only initialize Resend if API key is available
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+import { sendEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -44,24 +41,21 @@ export async function POST(req: Request) {
       },
     });
 
-    // Send invitation email if Resend is configured
-    if (resend) {
-      try {
-        await resend.emails.send({
-          from: "DealRoom <noreply@dealroom.com>",
-          to: email,
-          subject: `Invitation to join ${organization?.name} on DealRoom`,
-          html: `
-            <p>You've been invited to join ${organization?.name} on DealRoom.</p>
-            <p>Click the link below to accept the invitation:</p>
-            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}">Accept Invitation</a></p>
-            <p>This invitation will expire in 7 days.</p>
-          `,
-        });
-      } catch (error) {
-        console.error("Failed to send invitation email:", error);
-        // Continue without email sending
-      }
+    // Send invitation email
+    try {
+      await sendEmail({
+        to: email,
+        subject: `Invitation to join ${organization?.name} on Plainsale`,
+        htmlBody: `
+          <p>You've been invited to join ${organization?.name} on Plainsale.</p>
+          <p>Click the link below to accept the invitation:</p>
+          <p><a href="${process.env.NEXTAUTH_URL}/invite/${token}">Accept Invitation</a></p>
+          <p>This invitation will expire in 7 days.</p>
+        `,
+      });
+    } catch (error) {
+      console.error("Failed to send invitation email:", error);
+      // Continue without email sending
     }
 
     return NextResponse.json({
