@@ -6,20 +6,26 @@ CREATE TYPE "DealStatus" AS ENUM ('ACTIVE', 'CLOSED', 'ARCHIVED');
 
 -- CreateEnum
 CREATE TYPE "TimelineEventType" AS ENUM (
-  'DEAL_CREATED',
-  'STATUS_CHANGE',
-  'RESOURCE_ADDED',
-  'RESOURCE_REMOVED',
-  'MEMBER_ADDED',
-  'MEMBER_REMOVED',
-  'MEETING_SCHEDULED',
-  'MEETING_COMPLETED',
-  'EMAIL_SENT',
-  'EMAIL_RECEIVED',
-  'NOTE_ADDED',
-  'MILESTONE_REACHED',
-  'TASK_COMPLETED'
+    'DEAL_CREATED',
+    'STATUS_CHANGE',
+    'RESOURCE_ADDED',
+    'RESOURCE_REMOVED',
+    'MEMBER_ADDED',
+    'MEMBER_REMOVED',
+    'MEETING_SCHEDULED',
+    'MEETING_COMPLETED',
+    'EMAIL_SENT',
+    'EMAIL_RECEIVED',
+    'NOTE_ADDED',
+    'MILESTONE_REACHED',
+    'TASK_COMPLETED'
 );
+
+-- CreateEnum
+CREATE TYPE "AccessRole" AS ENUM ('OWNER', 'ADMIN', 'EDITOR', 'VIEWER');
+
+-- CreateEnum
+CREATE TYPE "AccessType" AS ENUM ('TEAM', 'PROSPECT');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -77,52 +83,30 @@ CREATE TABLE "Resource" (
 );
 
 -- CreateTable
-CREATE TABLE "Invitation" (
+CREATE TABLE "DealRoomRole" (
     "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "role" "UserRole" NOT NULL,
-    "token" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "role" "AccessRole" NOT NULL DEFAULT 'VIEWER',
+    "userId" TEXT NOT NULL,
+    "dealRoomId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Invitation_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "DealRoomRole_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Activity" (
+CREATE TABLE "DealRoomAccess" (
     "id" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "dealRoomId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "resourceId" TEXT,
-    "metadata" JSONB,
+    "type" "AccessType" NOT NULL,
+    "token" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "lastAccess" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Activity_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "TimelineEvent" (
-    "id" TEXT NOT NULL,
-    "type" "TimelineEventType" NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT,
-    "metadata" JSONB,
-    "isInternal" BOOLEAN NOT NULL DEFAULT false,
-    "dealRoomId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "resourceId" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "TimelineEvent_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "_DealRoomMembers" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+    CONSTRAINT "DealRoomAccess_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -132,13 +116,13 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "Organization_domain_key" ON "Organization"("domain");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Invitation_token_key" ON "Invitation"("token");
+CREATE UNIQUE INDEX "DealRoomRole_userId_dealRoomId_key" ON "DealRoomRole"("userId", "dealRoomId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_DealRoomMembers_AB_unique" ON "_DealRoomMembers"("A", "B");
+CREATE UNIQUE INDEX "DealRoomAccess_token_key" ON "DealRoomAccess"("token");
 
 -- CreateIndex
-CREATE INDEX "_DealRoomMembers_B_index" ON "_DealRoomMembers"("B");
+CREATE UNIQUE INDEX "DealRoomAccess_dealRoomId_email_key" ON "DealRoomAccess"("dealRoomId", "email");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -153,28 +137,10 @@ ALTER TABLE "DealRoom" ADD CONSTRAINT "DealRoom_createdById_fkey" FOREIGN KEY ("
 ALTER TABLE "Resource" ADD CONSTRAINT "Resource_dealRoomId_fkey" FOREIGN KEY ("dealRoomId") REFERENCES "DealRoom"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Invitation" ADD CONSTRAINT "Invitation_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "DealRoomRole" ADD CONSTRAINT "DealRoomRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Activity" ADD CONSTRAINT "Activity_dealRoomId_fkey" FOREIGN KEY ("dealRoomId") REFERENCES "DealRoom"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "DealRoomRole" ADD CONSTRAINT "DealRoomRole_dealRoomId_fkey" FOREIGN KEY ("dealRoomId") REFERENCES "DealRoom"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Activity" ADD CONSTRAINT "Activity_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Activity" ADD CONSTRAINT "Activity_resourceId_fkey" FOREIGN KEY ("resourceId") REFERENCES "Resource"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "TimelineEvent" ADD CONSTRAINT "TimelineEvent_dealRoomId_fkey" FOREIGN KEY ("dealRoomId") REFERENCES "DealRoom"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "TimelineEvent" ADD CONSTRAINT "TimelineEvent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "TimelineEvent" ADD CONSTRAINT "TimelineEvent_resourceId_fkey" FOREIGN KEY ("resourceId") REFERENCES "Resource"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_DealRoomMembers" ADD CONSTRAINT "_DealRoomMembers_A_fkey" FOREIGN KEY ("A") REFERENCES "DealRoom"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_DealRoomMembers" ADD CONSTRAINT "_DealRoomMembers_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DealRoomAccess" ADD CONSTRAINT "DealRoomAccess_dealRoomId_fkey" FOREIGN KEY ("dealRoomId") REFERENCES "DealRoom"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -31,9 +31,6 @@ CREATE TABLE "DealRoomAccess" (
     CONSTRAINT "DealRoomAccess_pkey" PRIMARY KEY ("id")
 );
 
--- AlterTable
-ALTER TABLE "Resource" ADD COLUMN IF NOT EXISTS "contentType" TEXT;
-
 -- CreateIndex
 CREATE UNIQUE INDEX "DealRoomRole_userId_dealRoomId_key" ON "DealRoomRole"("userId", "dealRoomId");
 
