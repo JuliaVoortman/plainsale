@@ -62,41 +62,43 @@ export default async function DealRoomPage({ params }: DealRoomPageProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex-1 bg-white">
       <DealRoomHeader dealRoom={dealRoom} />
       
       <Tabs defaultValue="internal" className="space-y-6">
-        <div className="sticky top-[65px] z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-          <div className="container flex h-14 max-w-screen-2xl items-center">
-            <TabsList className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1">
+        <div className="sticky top-[65px] z-40 bg-white border-b">
+          <div className="container mx-auto px-4">
+            <TabsList className="h-14">
               <TabsTrigger value="internal" className="text-[#002447]">Internal View</TabsTrigger>
               <TabsTrigger value="customer" className="text-[#002447]">Customer View</TabsTrigger>
             </TabsList>
           </div>
         </div>
 
-        <TabsContent value="internal" className="space-y-6">
-          <div className="container grid gap-6 md:grid-cols-7">
-            <div className="md:col-span-5">
-              <ResourceGrid resources={dealRoom.resources} />
-            </div>
-            <div className="md:col-span-2 space-y-6">
-              <ResourceUpload dealRoomId={dealRoom.id} />
-              <Card className="p-6">
-                <h3 className="font-semibold text-[#002447] mb-4 flex items-center gap-2">
-                  Recent Activity
-                </h3>
-                <ActivityTimeline 
-                  activities={dealRoom.activities} 
-                  dealRoomId={dealRoom.id}
-                />
-              </Card>
+        <TabsContent value="internal">
+          <div className="container mx-auto px-4">
+            <div className="grid gap-6 md:grid-cols-7">
+              <div className="md:col-span-5">
+                <ResourceGrid resources={dealRoom.resources} />
+              </div>
+              <div className="md:col-span-2 space-y-6">
+                <ResourceUpload dealRoomId={dealRoom.id} />
+                <Card className="p-6">
+                  <h3 className="font-semibold text-[#002447] mb-4 flex items-center gap-2">
+                    Recent Activity
+                  </h3>
+                  <ActivityTimeline 
+                    activities={dealRoom.activities} 
+                    dealRoomId={dealRoom.id}
+                  />
+                </Card>
+              </div>
             </div>
           </div>
         </TabsContent>
 
         <TabsContent value="customer">
-          <div className="container max-w-5xl mx-auto">
+          <div className="container mx-auto px-4">
             <ResourceGrid 
               resources={dealRoom.resources} 
               isCustomerView={true}
