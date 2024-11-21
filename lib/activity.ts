@@ -1,5 +1,13 @@
 import { prisma } from "@/lib/prisma";
-import { ActivityType } from "@prisma/client";
+
+type ActivityType = 
+  | "RESOURCE_UPLOAD"
+  | "RESOURCE_DELETE"
+  | "MEMBER_ADD"
+  | "MEMBER_REMOVE"
+  | "STATUS_CHANGE"
+  | "COMMENT_ADD"
+  | "COMMENT_DELETE";
 
 interface CreateActivityProps {
   type: ActivityType;
