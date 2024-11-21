@@ -1,19 +1,19 @@
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { validateProspectAccess } from "@/lib/access-control";
 import { sendEmail } from "@/lib/email";
 
 export async function POST(
-  req: NextRequest,
-  { params }: { params: { dealRoomId: string } }
+  request: NextRequest,
+  context: { params: { dealRoomId: string } }
 ) {
   try {
-    const { email } = await req.json();
+    const { email } = await request.json();
 
     // Check if email has access
-    const hasAccess = await validateProspectAccess(params.dealRoomId, email);
+    const hasAccess = await validateProspectAccess(context.params.dealRoomId, email);
     
     if (!hasAccess) {
       // Return success even if no access to prevent email enumeration
@@ -27,7 +27,7 @@ export async function POST(
     await prisma.dealRoomAccess.update({
       where: {
         dealRoomId_email: {
-          dealRoomId: params.dealRoomId,
+          dealRoomId: context.params.dealRoomId,
           email,
         },
       },
@@ -38,7 +38,7 @@ export async function POST(
     });
 
     const dealRoom = await prisma.dealRoom.findUnique({
-      where: { id: params.dealRoomId },
+      where: { id: context.params.dealRoomId },
       include: { organization: true },
     });
 
@@ -48,7 +48,7 @@ export async function POST(
       subject: `Access ${dealRoom?.name} Deal Room`,
       htmlBody: `
         <p>Click the link below to access the deal room:</p>
-        <p><a href="${process.env.NEXTAUTH_URL}/deal-rooms/${params.dealRoomId}?access_token=${token}">
+        <p><a href="${process.env.NEXTAUTH_URL}/deal-rooms/${context.params.dealRoomId}?access_token=${token}">
           Access Deal Room
         </a></p>
         <p>This link will expire in 24 hours.</p>
