@@ -4,6 +4,14 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  webpack: (config) => {
+    // Ignore bcrypt's HTML files
+    config.module.rules.push({
+      test: /\.html$/,
+      loader: 'ignore-loader'
+    });
+    return config;
+  }
 };
 
 module.exports = nextConfig;
