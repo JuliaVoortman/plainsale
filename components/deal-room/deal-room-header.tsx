@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DealRoom } from "@prisma/client";
+import { DealRoom, User } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +31,7 @@ import { viewModeAtom } from '@/lib/atoms';
 
 interface DealRoomHeaderProps {
   dealRoom: DealRoom & {
-    members: any[];
+    members: User[];
   };
 }
 

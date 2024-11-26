@@ -1,12 +1,10 @@
-"use client";
-
-import { ViewModeProvider } from "@/components/providers/view-mode-provider";
-import { DealRoomHeader } from "@/components/deal-room/deal-room-header";
-import { DealRoomNavigation } from "@/components/deal-room/deal-room-navigation";
 import { useEffect, useState } from "react";
 import { DealRoom, User } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { ViewModeProvider } from "@/components/providers/view-mode-provider";
+import { DealRoomHeader } from "@/components/deal-room/deal-room-header";
+import { DealRoomNavigation } from "@/components/deal-room/deal-room-navigation";
 
 interface DealRoomWithRelations extends DealRoom {
   members: User[];
