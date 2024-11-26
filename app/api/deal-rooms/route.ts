@@ -2,6 +2,8 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
+import { generateDealRoomId } from "@/lib/utils";
+import { createTimelineEvent } from "@/lib/timeline";
 
 export async function GET() {
   try {
@@ -39,6 +41,7 @@ export async function POST(req: Request) {
 
     const dealRoom = await prisma.dealRoom.create({
       data: {
+        id: generateDealRoomId(), // Use our custom ID generator
         name,
         description,
         organizationId: session.user.organizationId,
@@ -49,6 +52,14 @@ export async function POST(req: Request) {
           },
         },
       },
+    });
+
+    // Create initial timeline event
+    await createTimelineEvent({
+      type: "DEAL_CREATED",
+      title: "Deal room created",
+      dealRoomId: dealRoom.id,
+      userId: session.user.id,
     });
 
     return NextResponse.json(dealRoom);

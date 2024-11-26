@@ -28,22 +28,20 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="flex-1 space-y-8 bg-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-[#002447]">
-              Deal Rooms
-            </h2>
-            <p className="text-[#002447]/60">
-              Manage and track your active deals
-            </p>
-          </div>
-          <CreateDealRoomButton />
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight text-[#002447]">
+            Deal Rooms
+          </h2>
+          <p className="text-[#002447]/60">
+            Manage and track your active deals
+          </p>
         </div>
-        <div className="mt-8">
-          <DealRoomList initialDealRooms={dealRooms} />
-        </div>
+        <CreateDealRoomButton />
+      </div>
+      <div className="mt-8">
+        <DealRoomList initialDealRooms={dealRooms} />
       </div>
     </div>
   );

@@ -55,7 +55,7 @@ export function CreateDealRoomButton() {
 
       setIsOpen(false);
       router.refresh();
-      router.push(`/dashboard/${dealRoom.id}`);
+      router.push(`/room/${dealRoom.id}`);
     } catch (error) {
       toast({
         variant: "destructive",

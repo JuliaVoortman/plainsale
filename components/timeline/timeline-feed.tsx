@@ -9,24 +9,21 @@ import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { TimelineEventIcon } from "./timeline-event-icon";
 import { TimelineEventContent } from "./timeline-event-content";
+import { useAtom } from 'jotai';
+import { viewModeAtom } from '@/lib/atoms';
 
 type TimelineEventWithRelations = TimelineEvent & {
   user: User;
   resource?: Resource | null;
 };
 
-interface TimelineEventMetadata {
-  actionUrl?: string;
-  [key: string]: any;
-}
-
 interface TimelineFeedProps {
   initialEvents: TimelineEventWithRelations[];
   dealRoomId: string;
-  isCustomerView?: boolean;
 }
 
-export function TimelineFeed({ initialEvents, dealRoomId, isCustomerView }: TimelineFeedProps) {
+export function TimelineFeed({ initialEvents, dealRoomId }: TimelineFeedProps) {
+  const [viewMode] = useAtom(viewModeAtom);
   const [events, setEvents] = useState<TimelineEventWithRelations[]>(initialEvents);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -41,7 +38,7 @@ export function TimelineFeed({ initialEvents, dealRoomId, isCustomerView }: Time
       const cursor = lastEvent?.id;
 
       const response = await fetch(
-        `/api/deal-rooms/${dealRoomId}/timeline?cursor=${cursor}${isCustomerView ? '&customer=true' : ''}`,
+        `/api/deal-rooms/${dealRoomId}/timeline?cursor=${cursor}${viewMode === 'customer' ? '&customer=true' : ''}`,
         { method: "GET" }
       );
 
@@ -89,7 +86,7 @@ export function TimelineFeed({ initialEvents, dealRoomId, isCustomerView }: Time
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {events.map((event) => {
         const userInitials = event.user.name
           ?.split(" ")
@@ -97,45 +94,31 @@ export function TimelineFeed({ initialEvents, dealRoomId, isCustomerView }: Time
           .join("")
           .toUpperCase();
 
-        const metadata = event.metadata as TimelineEventMetadata;
-
         return (
-          <div key={event.id} className="flex gap-4">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={event.user.image || ""} alt={event.user.name || ""} />
-              <AvatarFallback>{userInitials}</AvatarFallback>
-            </Avatar>
+          <Card key={event.id} className="p-4">
+            <div className="flex gap-4">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={event.user.image || ""} alt={event.user.name || ""} />
+                <AvatarFallback>{userInitials}</AvatarFallback>
+              </Avatar>
 
-            <div className="flex-1 space-y-1">
-              <div className="flex items-start justify-between">
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-[#002447]">
-                      {event.user.name}
-                    </span>
-                    <TimelineEventIcon type={event.type} />
-                    <TimelineEventContent event={event} isCustomerView={isCustomerView} />
-                  </div>
-                  <p className="text-sm text-[#002447]/60">
-                    {formatDistanceToNow(new Date(event.createdAt), { addSuffix: true })}
-                  </p>
+              <div className="flex-1 space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-[#002447]">
+                    {event.user.name}
+                  </span>
+                  <TimelineEventIcon type={event.type} />
+                  <TimelineEventContent event={event} />
                 </div>
-                {metadata?.actionUrl && !isCustomerView && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-[#002447] border-[#002447] hover:bg-[#002447]/5"
-                    onClick={() => window.open(metadata.actionUrl, "_blank")}
-                  >
-                    View
-                  </Button>
+                <p className="text-sm text-[#002447]/60">
+                  {formatDistanceToNow(new Date(event.createdAt), { addSuffix: true })}
+                </p>
+                {event.description && (
+                  <p className="text-sm text-[#002447]/80 mt-2">{event.description}</p>
                 )}
               </div>
-              {event.description && (
-                <p className="text-sm text-[#002447]/80 mt-2">{event.description}</p>
-              )}
             </div>
-          </div>
+          </Card>
         );
       })}
 

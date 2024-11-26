@@ -1,3 +1,4 @@
+// components/dashboard/user-nav.tsx
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -29,9 +30,9 @@ export function UserNav({ user }: UserNavProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-8 w-8 border border-white/20">
             <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
-            <AvatarFallback>{userInitials}</AvatarFallback>
+            <AvatarFallback className="bg-white/10 text-white">{userInitials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

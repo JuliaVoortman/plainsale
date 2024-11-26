@@ -41,7 +41,7 @@ export function DealRoomList({ initialDealRooms }: DealRoomListProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {dealRooms.map((dealRoom) => (
-        <Link href={`/dashboard/${dealRoom.id}`} key={dealRoom.id}>
+        <Link href={`/room/${dealRoom.id}`} key={dealRoom.id}>
           <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 border-2 border-gray-100 hover:border-[#FEB249] bg-white">
             <CardHeader>
               <div className="flex items-center justify-between">

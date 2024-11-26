@@ -42,10 +42,11 @@ model Organization {
 }
 
 model DealRoom {
-  id             String           @id @default(cuid())
+  id             String           @id @default(nanoid(10))
   name           String
   description    String?
   status         DealStatus       @default(ACTIVE)
+  background     String?
   organizationId String
   organization   Organization     @relation(fields: [organizationId], references: [id])
   createdById    String

@@ -1,40 +1,43 @@
 "use client";
 
-import { DealRoom, User } from "@prisma/client";
+import { useState } from "react";
+import { DealRoom } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { 
-  Share2, 
-  Settings, 
-  MoreVertical, 
-  Archive, 
-  CheckCircle2, 
+import {
+  Send,
+  Settings,
+  MoreVertical,
+  Archive,
+  CheckCircle2,
   XCircle,
-  Users
+  Users,
+  Eye,
+  Users2
 } from "lucide-react";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
 import { ShareDealRoom } from "./share-deal-room";
 import { cn } from "@/lib/utils";
+import { useAtom } from 'jotai';
+import { viewModeAtom } from '@/lib/atoms';
 
 interface DealRoomHeaderProps {
   dealRoom: DealRoom & {
-    members: User[];
+    members: any[];
   };
 }
 
 export function DealRoomHeader({ dealRoom }: DealRoomHeaderProps) {
   const router = useRouter();
-  const { toast } = useToast();
+  const [viewMode, setViewMode] = useAtom(viewModeAtom);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,19 +51,9 @@ export function DealRoomHeader({ dealRoom }: DealRoomHeaderProps) {
       });
 
       if (!response.ok) throw new Error();
-
-      toast({
-        title: "Success",
-        description: "Deal room status updated",
-      });
-
       router.refresh();
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update status",
-      });
+      console.error("Failed to update status:", error);
     } finally {
       setIsLoading(false);
     }
@@ -68,37 +61,58 @@ export function DealRoomHeader({ dealRoom }: DealRoomHeaderProps) {
 
   return (
     <div className="border-b bg-white">
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-[#002447]">{dealRoom.name}</h1>
-              <Badge 
-                variant="outline" 
-                className={cn(
-                  "ml-2",
-                  dealRoom.status === "ACTIVE" && "bg-[#53D3D1]/10 text-[#002447] border-[#53D3D1]",
-                  dealRoom.status === "CLOSED" && "bg-[#FEB249]/10 text-[#002447] border-[#FEB249]",
-                  dealRoom.status === "ARCHIVED" && "bg-gray-100 text-gray-600 border-gray-300"
-                )}
-              >
-                {dealRoom.status.toLowerCase()}
-              </Badge>
-            </div>
-            {dealRoom.description && (
-              <p className="text-[#002447]/60 max-w-2xl">{dealRoom.description}</p>
-            )}
+      <div className="container mx-auto px-4">
+        <div className="h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl font-bold text-[#002447]">{dealRoom.name}</h1>
+            <Badge 
+              variant="outline" 
+              className={cn(
+                dealRoom.status === "ACTIVE" && "bg-[#53D3D1]/10 text-[#002447] border-[#53D3D1]",
+                dealRoom.status === "CLOSED" && "bg-[#FEB249]/10 text-[#002447] border-[#FEB249]",
+                dealRoom.status === "ARCHIVED" && "bg-gray-100 text-gray-600 border-gray-300"
+              )}
+            >
+              {dealRoom.status.toLowerCase()}
+            </Badge>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="bg-[#002447]/5 rounded-md p-1 h-9 flex">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "h-7 px-3",
+                  viewMode === "internal" && "bg-[#FEB249] text-[#002447] shadow-none"
+                )}
+                onClick={() => setViewMode("internal")}
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                Internal
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "h-7 px-3",
+                  viewMode === "customer" && "bg-[#FEB249] text-[#002447] shadow-none"
+                )}
+                onClick={() => setViewMode("customer")}
+              >
+                <Users2 className="mr-2 h-4 w-4" />
+                Customer
+              </Button>
+            </div>
+
             <Button 
               variant="outline" 
               size="sm"
               className="text-[#002447] border-[#002447] hover:bg-[#002447]/5"
               onClick={() => setIsShareOpen(true)}
             >
-              <Share2 className="mr-2 h-4 w-4" />
-              Invite
+              <Send className="mr-2 h-4 w-4" />
+              <span className="hidden md:inline">Invite</span>
             </Button>
 
             <Button 
@@ -107,7 +121,8 @@ export function DealRoomHeader({ dealRoom }: DealRoomHeaderProps) {
               className="text-[#002447] border-[#002447] hover:bg-[#002447]/5"
             >
               <Users className="mr-2 h-4 w-4" />
-              Members ({dealRoom.members.length})
+              <span className="hidden md:inline">Members</span>
+              <span className="ml-1">({dealRoom.members?.length || 0})</span>
             </Button>
 
             <DropdownMenu>

@@ -4,11 +4,11 @@ import { Brain, FolderOpen, Settings, Users } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { UserNav } from "@/components/dashboard/user-nav";
 
-interface DashboardNavProps {
+interface MainNavProps {
   user: User;
 }
 
-export function DashboardNav({ user }: DashboardNavProps) {
+export function MainNav({ user }: MainNavProps) {
   const navigation = [
     { name: "Deal Rooms", href: "/dashboard", icon: FolderOpen },
     { name: "Intelligence", href: "/intelligence", icon: Brain },
@@ -65,7 +65,7 @@ export function DashboardNav({ user }: DashboardNavProps) {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 relative z-10">
         <div className="flex items-center gap-8">
           <Link href="/dashboard">
-            <Logo className="w-48 h-auto text-white [&_path]:fill-white transition-all duration-200 hover:opacity-90" />
+            <Logo className="w-32 h-auto text-white [&_path]:fill-white transition-all duration-200 hover:opacity-90" />
           </Link>
           <nav className="hidden md:flex items-center space-x-2">
             {navigation.map((item) => (

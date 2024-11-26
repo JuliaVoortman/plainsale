@@ -7,7 +7,7 @@ import { TeamList } from "@/components/team/team-list";
 import { InviteTeamMember } from "@/components/team/invite-team-member";
 
 export const metadata: Metadata = {
-  title: "Team Management - DealRoom",
+  title: "Team Management - Plainsale",
   description: "Manage your team members and roles",
 };
 
@@ -28,17 +28,19 @@ export default async function TeamPage() {
   });
 
   return (
-    <div className="flex-1 space-y-4 p-4 pt-6">
+    <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Team</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-3xl font-bold tracking-tight text-[#002447]">Team</h2>
+          <p className="text-[#002447]/60">
             Manage your team members and their roles
           </p>
         </div>
         <InviteTeamMember />
       </div>
-      <TeamList users={users} currentUserId={session.user.id} />
+      <div className="mt-8">
+        <TeamList users={users} currentUserId={session.user.id} />
+      </div>
     </div>
   );
 }

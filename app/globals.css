@@ -70,4 +70,34 @@
   input.input-field {
     line-height: normal;
   }
+
+  .nav-gradient-animation {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      45deg,
+      #002447 0%,
+      #002447 40%,
+      #3A9B9A 60%, /* Changed from #53D3D1 to a more muted teal */
+      #002447 80%,
+      #002447 100%
+    );
+    background-size: 300% 300%;
+    animation: gradient-shift 30s ease infinite; /* Changed from 15s to 30s */
+    opacity: 1;
+  }
+  
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+
 }
