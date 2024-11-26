@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, Globe, Paintbrush } from "lucide-react";
+import { Building2, Globe } from "lucide-react";
 import { useAtom } from 'jotai';
-import { viewModeAtom, companyBrandingAtom } from '@/lib/atoms';
+import { viewModeAtom } from '@/lib/atoms';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,8 +20,6 @@ interface CompanyInfoProps {
   description?: string;
   website?: string;
   onUpdateDescription?: (description: string) => Promise<void>;
-  onUpdateLogo?: (logo: string) => Promise<void>;
-  onUpdateBranding?: (color: string) => Promise<void>;
 }
 
 export function CompanyInfo({ 
@@ -30,21 +28,12 @@ export function CompanyInfo({
   description, 
   website,
   onUpdateDescription,
-  onUpdateLogo,
-  onUpdateBranding
 }: CompanyInfoProps) {
   const { toast } = useToast();
   const [viewMode] = useAtom(viewModeAtom);
-  const [branding, setBranding] = useAtom(companyBrandingAtom);
   const [isEditing, setIsEditing] = useState(false);
   const [editedDescription, setEditedDescription] = useState(description);
-  const [isBrandingOpen, setIsBrandingOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [tempColor, setTempColor] = useState(branding);
-
-  const cardStyle = {
-    backgroundColor: branding,
-  };
 
   async function handleSaveDescription() {
     if (!onUpdateDescription) return;
@@ -68,48 +57,12 @@ export function CompanyInfo({
     }
   }
 
-  async function handleSaveBranding() {
-    if (!onUpdateBranding) return;
-    
-    setIsLoading(true);
-    try {
-      await onUpdateBranding(tempColor);
-      setBranding(tempColor);
-      toast({
-        title: "Success",
-        description: "Company branding updated",
-      });
-      setIsBrandingOpen(false);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update branding",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   return (
     <div className="space-y-4">
-      <Card 
-        className="relative group overflow-hidden transition-all duration-200"
-        style={cardStyle}
-      >
-        {viewMode === 'internal' && (
-          <Button
-            size="sm"
-            variant="ghost"
-            className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 text-white/60 hover:text-white hover:bg-white/20 transition-all duration-200"
-            onClick={() => setIsBrandingOpen(true)}
-          >
-            <Paintbrush className="h-4 w-4" />
-          </Button>
-        )}
+      <Card className="bg-white">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
-            <div className="h-16 w-32 rounded-lg bg-white/90 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="h-16 w-32 rounded-lg bg-[#002447]/5 flex items-center justify-center p-4">
               {logo ? (
                 <img 
                   src={logo} 
@@ -139,8 +92,8 @@ export function CompanyInfo({
           {description && !isEditing && (
             <div 
               className={cn(
-                "mt-4 text-sm text-[#002447]/80 bg-white/10 rounded-lg p-3 backdrop-blur-sm transition-all duration-200",
-                viewMode === 'internal' && "cursor-pointer hover:bg-[#002447]/5"
+                "mt-4 text-sm text-[#002447]/80 bg-[#002447]/5 rounded-lg p-3 transition-all duration-200",
+                viewMode === 'internal' && "cursor-pointer hover:bg-[#002447]/10"
               )}
               onClick={() => viewMode === 'internal' && setIsEditing(true)}
             >
@@ -153,7 +106,7 @@ export function CompanyInfo({
               <Textarea
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
-                className="min-h-[100px] bg-white/90 border-0 resize-none text-[#002447]"
+                className="min-h-[100px] resize-none text-[#002447] border-[#002447]/20"
                 placeholder="Enter company description..."
               />
               <div className="flex justify-end gap-2">
@@ -184,51 +137,6 @@ export function CompanyInfo({
       </Card>
 
       <CompanyGallery />
-
-      <Dialog open={isBrandingOpen} onOpenChange={setIsBrandingOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Company Card Background</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>Background Color</Label>
-              <div className="flex gap-2">
-                <Input
-                  type="color"
-                  value={tempColor}
-                  onChange={(e) => setTempColor(e.target.value)}
-                  className="w-20 h-10 p-1"
-                />
-                <Input
-                  type="text"
-                  value={tempColor}
-                  onChange={(e) => setTempColor(e.target.value)}
-                  className="font-mono"
-                />
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setTempColor(branding);
-                setIsBrandingOpen(false);
-              }}
-              disabled={isLoading}
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleSaveBranding}
-              disabled={isLoading}
-            >
-              {isLoading ? "Saving..." : "Save Changes"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

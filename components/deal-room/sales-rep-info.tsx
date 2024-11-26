@@ -27,7 +27,7 @@ export function SalesRepInfo({
   const [viewMode] = useAtom(viewModeAtom);
 
   return (
-    <Card className="h-full">
+    <Card className="bg-white">
       <CardContent className="p-4 space-y-4">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10 border-2 border-[#002447]/10">
@@ -75,7 +75,7 @@ export function SalesRepInfo({
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="gap-2 text-xs"
+                  className="gap-2 text-xs border-[#002447]/20 text-[#002447] hover:bg-[#002447]/5"
                   onClick={() => {
                     // Implement video upload
                   }}

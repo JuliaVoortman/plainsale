@@ -63,7 +63,7 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { name, description, status } = await req.json();
+    const { name, description, status, background } = await req.json();
 
     const dealRoom = await prisma.dealRoom.update({
       where: {
@@ -74,6 +74,7 @@ export async function PATCH(
         ...(name && { name }),
         ...(description && { description }),
         ...(status && { status }),
+        ...(background && { background }),
       },
       include: {
         members: true,
