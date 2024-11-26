@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { TeamList } from "@/components/team/team-list";
 import { InviteTeamMember } from "@/components/team/invite-team-member";
-import { DashboardNav } from "@/components/dashboard/dashboard-nav";
 
 export const metadata: Metadata = {
   title: "Team Management - Plainsale",
@@ -29,24 +28,19 @@ export default async function TeamPage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
-      <DashboardNav user={session.user} />
-      <main className="flex-1">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight text-[#002447]">Team</h2>
-              <p className="text-[#002447]/60">
-                Manage your team members and their roles
-              </p>
-            </div>
-            <InviteTeamMember />
-          </div>
-          <div className="mt-8">
-            <TeamList users={users} currentUserId={session.user.id} />
-          </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight text-[#002447]">Team</h2>
+          <p className="text-[#002447]/60">
+            Manage your team members and their roles
+          </p>
         </div>
-      </main>
+        <InviteTeamMember />
+      </div>
+      <div className="mt-8">
+        <TeamList users={users} currentUserId={session.user.id} />
+      </div>
     </div>
   );
 }
