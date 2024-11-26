@@ -16,6 +16,18 @@ export async function GET(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    // First verify the deal room exists and user has access
+    const dealRoom = await prisma.dealRoom.findFirst({
+      where: {
+        id: params.dealRoomId,
+        organizationId: session.user.organizationId,
+      },
+    });
+
+    if (!dealRoom) {
+      return new NextResponse("Not found", { status: 404 });
+    }
+
     const { searchParams } = new URL(req.url);
     const cursor = searchParams.get("cursor");
     const isCustomerView = searchParams.get("customer") === "true";

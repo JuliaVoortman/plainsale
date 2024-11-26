@@ -24,43 +24,42 @@ interface DealRoomNavigationProps {
 export function DealRoomNavigation({ dealRoomId }: DealRoomNavigationProps) {
   const [viewMode] = useAtom(viewModeAtom);
   const pathname = usePathname();
-  const basePath = `/room/${dealRoomId}`;
 
   const internalNavigation = [
     { 
       label: "Overview", 
       icon: Home, 
-      href: basePath
+      href: `/room/${dealRoomId}`
     },
     { 
       label: "Timeline", 
       icon: Timer, 
-      href: `${basePath}/timeline` 
+      href: `/room/${dealRoomId}/timeline` 
     },
     { 
       label: "Resources", 
       icon: FileText, 
-      href: `${basePath}/resources` 
+      href: `/room/${dealRoomId}/resources` 
     },
     { 
       label: "Team", 
       icon: Users, 
-      href: `${basePath}/team` 
+      href: `/room/${dealRoomId}/team` 
     },
     { 
       label: "Meetings", 
       icon: CalendarDays, 
-      href: `${basePath}/meetings` 
+      href: `/room/${dealRoomId}/meetings` 
     },
     { 
       label: "Messages", 
       icon: MessageSquare, 
-      href: `${basePath}/messages` 
+      href: `/room/${dealRoomId}/messages` 
     },
     { 
       label: "Emails", 
       icon: Mail, 
-      href: `${basePath}/emails` 
+      href: `/room/${dealRoomId}/emails` 
     },
   ];
 
@@ -68,22 +67,22 @@ export function DealRoomNavigation({ dealRoomId }: DealRoomNavigationProps) {
     { 
       label: "Overview", 
       icon: Home, 
-      href: basePath
+      href: `/room/${dealRoomId}`
     },
     { 
       label: "Resources", 
       icon: FileText, 
-      href: `${basePath}/resources` 
+      href: `/room/${dealRoomId}/resources` 
     },
     { 
       label: "Meetings", 
       icon: CalendarDays, 
-      href: `${basePath}/meetings` 
+      href: `/room/${dealRoomId}/meetings` 
     },
     { 
       label: "Messages", 
       icon: MessageSquare, 
-      href: `${basePath}/messages` 
+      href: `/room/${dealRoomId}/messages` 
     },
   ];
 
