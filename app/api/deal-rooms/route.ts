@@ -10,7 +10,7 @@ export async function GET() {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.organizationId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const dealRooms = await prisma.dealRoom.findMany({
@@ -25,7 +25,7 @@ export async function GET() {
     return NextResponse.json(dealRooms);
   } catch (error) {
     console.error("[DEAL_ROOMS_GET]", error);
-    return new NextResponse("Internal error", { status: 500 });
+    return NextResponse.json({ message: "Internal error" }, { status: 500 });
   }
 }
 
@@ -34,16 +34,21 @@ export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.organizationId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, description } = await req.json();
+    const { name, description, status } = await req.json();
+
+    if (!name || !description || !status) {
+      return NextResponse.json({ message: "Name, description, and status are required" }, { status: 400 });
+    }
 
     const dealRoom = await prisma.dealRoom.create({
       data: {
         id: generateDealRoomId(), // Use our custom ID generator
         name,
         description,
+        status, // Add the status field
         organizationId: session.user.organizationId,
         createdById: session.user.id,
         members: {
@@ -65,6 +70,6 @@ export async function POST(req: Request) {
     return NextResponse.json(dealRoom);
   } catch (error) {
     console.error("[DEAL_ROOMS_POST]", error);
-    return new NextResponse("Internal error", { status: 500 });
+    return NextResponse.json({ message: "Internal error" }, { status: 500 });
   }
 }

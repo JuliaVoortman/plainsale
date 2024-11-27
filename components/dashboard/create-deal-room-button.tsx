@@ -39,11 +39,13 @@ export function CreateDealRoomButton() {
         body: JSON.stringify({
           name,
           description,
+          status: "ACTIVE", // Add the status field
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create deal room");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create deal room");
       }
 
       const dealRoom = await response.json();
@@ -57,10 +59,11 @@ export function CreateDealRoomButton() {
       router.refresh();
       router.push(`/room/${dealRoom.id}`);
     } catch (error) {
+      const errorMessage = (error as Error).message || "Failed to create deal room";
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to create deal room",
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);

@@ -15,7 +15,7 @@ export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.organizationId) {
-    redirect("/login");
+    return redirect("/login");
   }
 
   const dealRooms = await prisma.dealRoom.findMany({

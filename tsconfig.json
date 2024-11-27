@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017", // Changed from es5 to es2017 for better compatibility with modern JavaScript features
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "commonjs", // Changed from esnext to commonjs for compatibility with Node.js
+    "moduleResolution": "node", // Changed from bundler to node for compatibility with Node.js
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",

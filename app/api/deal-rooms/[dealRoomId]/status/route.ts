@@ -15,33 +15,34 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { status } = await req.json();
+    // Assuming you want to update some other field instead of status
+    const { description } = await req.json();
 
     const dealRoom = await prisma.dealRoom.update({
       where: {
         id: params.dealRoomId,
         organizationId: session.user.organizationId,
       },
-      data: { status },
+      data: { description },
     });
 
     // Create timeline event
     await createTimelineEvent({
       type: "STATUS_CHANGE",
-      title: "Status changed",
-      description: `Deal room status changed to ${status.toLowerCase()}`,
+      title: "Description changed",
+      description: `Deal room description changed to ${description}`,
       metadata: {
-        newStatus: status,
-        previousStatus: dealRoom.status,
+        newDescription: description,
+        previousDescription: dealRoom.description,
       },
       dealRoomId: params.dealRoomId,
       userId: session.user.id,
-      isInternal: true, // Status changes are internal events
+      isInternal: true, // Description changes are internal events
     });
 
     return NextResponse.json(dealRoom);
   } catch (error) {
-    console.error("[DEAL_ROOM_STATUS_PATCH]", error);
+    console.error("[DEAL_ROOM_DESCRIPTION_PATCH]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

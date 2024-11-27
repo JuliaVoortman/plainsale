@@ -45,7 +45,7 @@ model DealRoom {
   id             String           @id @default(nanoid(10))
   name           String
   description    String?
-  status         DealStatus       @default(ACTIVE)
+  status         DealStatus       @default(ACTIVE) // Add this line
   background     String?
   organizationId String
   organization   Organization     @relation(fields: [organizationId], references: [id])
@@ -59,6 +59,12 @@ model DealRoom {
   roles          DealRoomRole[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+}
+
+enum DealStatus {
+  ACTIVE
+  CLOSED
+  ARCHIVED
 }
 
 model Resource {
@@ -147,12 +153,6 @@ model DealRoomRole {
 enum UserRole {
   ADMIN
   USER
-}
-
-enum DealStatus {
-  ACTIVE
-  CLOSED
-  ARCHIVED
 }
 
 enum TimelineEventType {
